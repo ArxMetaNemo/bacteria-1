@@ -1,8 +1,8 @@
-local t=cryptocoins.load("cryptocoins.ini")
-local tgst=cryptocoins.gettable(t,'tgst')
-local tdash=cryptocoins.gettable(t,'tdash')
+t=cryptocoins.load("cryptocoins.ini")
+tgst=cryptocoins.gettable(t,'tgst')
+tdash=cryptocoins.gettable(t,'tdash')
 
-local cryptocoins = {
+cryptocoins = {
    {
        name = tgst['name'],
        host=tgst['host'],
@@ -29,6 +29,7 @@ for index, data in ipairs(cryptocoins) do
     end
 end
 
-print("cryptocoins.clear(t) for clear cryptocoins, but i would to clear from C when program is clear/... and maybe is will be deprecated method. because cryptocoins will be load one time!")
 
-
+--print("cryptocoins.clear(t) for clear cryptocoins, but i would to clear from C when program is clear/... and maybe is will be deprecated method. because cryptocoins will be load one time!")
+-- print(tgst['host'])
+-- print(tgst['...'])
