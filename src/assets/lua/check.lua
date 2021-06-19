@@ -1,3 +1,4 @@
+json = require "json"
 t=cryptocoins.load("cryptocoins.ini")
 tgst=cryptocoins.gettable(t,'tgst')
 tdash=cryptocoins.gettable(t,'tdash')
