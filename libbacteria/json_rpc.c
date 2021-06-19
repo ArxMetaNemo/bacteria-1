@@ -1,9 +1,4 @@
-#include<curl/curl.h>
-#include<stdlib.h>
-#include<string.h>
-#include<jansson.h>
-#include<stdarg.h>
-#include"cryptocoins.h"
+#include"json_rpc.h"
 /*
 addmultisigaddress <nrequired> <'["key","key"]'> [account]
 addnode <node> <add|remove|onetry>
@@ -72,11 +67,6 @@ verifymessage <gostcoinaddress> <signature> <message>
 	
 */
 //#define RPCBUFMAX 2056
-struct bitcoin_rpc_data{
-	const char * method;
-	json_t * params;
-	char * json_ret;
-};
 
 json_t * brpc_prepare_params(char * data,...){
 	json_t * ret = json_array();
@@ -113,38 +103,10 @@ void brpc_clear_bdata(struct bitcoin_rpc_data * data){
 	free(data->json_ret);
 }
 
-/*thx, Alex Jasmin*/
-struct string {
-  char *ptr;
-  size_t len;
-};
 
-static void init_string(struct string *s) {
-  s->len = 0;
-  s->ptr = malloc(s->len+1);
-  if (s->ptr == NULL) {
-    fprintf(stderr, "malloc() failed\n");
-    exit(EXIT_FAILURE);
-  }
-  s->ptr[0] = '\0';
-}
+extern void init_string(struct string *s);
 
-static size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
-{
-  size_t new_len = s->len + size*nmemb;
-  s->ptr = realloc(s->ptr, new_len+1);
-  if (s->ptr == NULL) {
-    fprintf(stderr, "realloc() failed\n");
-    exit(EXIT_FAILURE);
-  }
-  memcpy(s->ptr+s->len, ptr, size*nmemb);
-  s->ptr[new_len] = '\0';
-  s->len = new_len;
-
-  return size*nmemb;
-}
-/*~~~~~~~~~~~~~~~~~~~~~~~*/
-
+extern size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s);
 json_t * brpc_json_request(struct cryptocoin * c, struct bitcoin_rpc_data * bdata){
             CURL *curl = curl_easy_init();
 	    struct curl_slist *headers = NULL;
@@ -192,26 +154,4 @@ json_t * brpc_json_request(struct cryptocoin * c, struct bitcoin_rpc_data * bdat
 	    return ret;
 }
 
-static void example(void)
-{
-	struct bitcoin_rpc_data bdata = {"listaccounts", brpc_prepare_params(NULL)};
-	brpc_get_json(&bdata);
-	const char * account_name = "ANCMS_Abj1pcMsse";
-	struct cryptocoin  c = {false, "gostcoinrpc", "97WDPgQADfazR6pQRdMEjQeDeCSzTwVaMEZU1dGaTmLo",
-		 19376, "127.0.0.1", NULL};
-	json_t * data = brpc_json_request(&c,&bdata);
-	json_t * result = json_object_get(data, "result");
 
-	if(!json_is_object(result))
-    	{
-		puts("Result not found");
-        	json_decref(data);
-    //    	exit(1);
-    	}else{
-		   json_t * ancms_account = json_object_get(result, account_name);
-		   float balance = json_number_value(ancms_account);
-		   printf("Account balance of %s: %f\n",account_name,balance);
-	}
-        json_decref(data);
-    
-}

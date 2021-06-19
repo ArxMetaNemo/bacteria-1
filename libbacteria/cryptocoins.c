@@ -1,5 +1,5 @@
 #include"cryptocoins.h"
-
+extern uint count_cryptocoins;
 struct cryptocoin * init_cryptocoins(const char * pathToIniFile){
 	#define GET_SEC(def) sprintf(tmp_buf, "%s:%s", sec_name, "" #def); 	
 		/*
@@ -42,7 +42,8 @@ struct cryptocoin * init_cryptocoins(const char * pathToIniFile){
 
 	dictionary * ini_file = iniparser_load(pathToIniFile);
 	if(ini_file == NULL) return NULL;
-	int count_cryptocoins = iniparser_getnsec(ini_file);
+	count_cryptocoins = iniparser_getnsec(ini_file);
+
 	struct cryptocoin * cryptocoins = calloc( sizeof(struct cryptocoin) , count_cryptocoins);
 	if(cryptocoins == NULL) {
 		perror("Access memory");
@@ -53,7 +54,7 @@ struct cryptocoin * init_cryptocoins(const char * pathToIniFile){
 	char tmp_buf[1024];
 	bzero(tmp_buf,sizeof(tmp_buf));
 
-	for(int i = count_cryptocoins;i--;){
+	for(uint i = count_cryptocoins;i--;){
 		 sec_name =(char*) iniparser_getsecname(ini_file, i);
 		 const char * pre_cryptocoin_name = sec_name;
 		 SET_VALUE_string(cryptocoin_name);
@@ -91,7 +92,7 @@ struct cryptocoin * init_cryptocoins(const char * pathToIniFile){
 };
 
 void dump_cryptocoins(struct cryptocoin* cryptocoins){
-	for(unsigned char i = 0; cryptocoins[i].rpchost != NULL && cryptocoins[i].rpcport != 0;i++){
+	for(unsigned char i = count_cryptocoins; i--;){//cryptocoins[i].rpchost != NULL && cryptocoins[i].rpcport != 0;i++){
 		printf("Cryptocoin - %s\n",cryptocoins[i].cryptocoin_name);
 		printf("%s:%d %s:%s testnet:%s\n",cryptocoins[i].rpchost, cryptocoins[i].rpcport, cryptocoins[i].rpcuser, 
 			cryptocoins[i].rpcpassword, cryptocoins[i].testnet? "is testnet" : "is not testnet");	

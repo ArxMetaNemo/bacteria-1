@@ -27,7 +27,7 @@ void serv_thread(struct serv_arguments * arguments){
 	
 	ret = bind(main_descriptor, (struct sockaddr*)&my_addr, sizeof(struct sockaddr_in));
 	if(ret == -1) {
-		doExit("Can't init listen on %s:%s\n", arguments->listen_host, arguments->listen_port);
+		doExit("Can't init listen on %s:%d\n", arguments->listen_host, arguments->listen_port);
 	}
 	if( listen(main_descriptor,MAX_LISTEN) == -1) doExit("Cant start listening\n");
 
