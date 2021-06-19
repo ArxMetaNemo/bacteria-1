@@ -8,6 +8,7 @@ Makefile.in
 /ylwrap
 .deps/
 .dirstamp
+src/.deps/
 
 # http://www.gnu.org/software/autoconf
 
