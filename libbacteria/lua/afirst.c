@@ -61,7 +61,7 @@
 
 
 
-int main (void) {
+int start_lua (void) {
       char buff[256];
       int error;
       lua_State *L = lua_open();   /* opens Lua */

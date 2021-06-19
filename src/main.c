@@ -27,7 +27,7 @@ int main(int argc, char ** argv){
 	if ( pthread_create(&pthreadServ, NULL, fun, (void*)&args) != 0){
 		return eprintf("can't start thread!\n");
 	}else puts("server is inited");
-	
+	start_lua();	
 	pthread_join(pthreadServ,NULL);
 
 	clear_cryptocoins(cryptocoins);
