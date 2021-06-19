@@ -1,4 +1,12 @@
 AM_CFLAGS = 
 bin_PROGRAMS = bacteria
-bacteria_SOURCES = async_serv.c  async_serv.h  cryptocoins.c  cryptocoins.h  json_rpc.c  macros.h  main.c  signal_handler.c  signal_handler.h
+bacteria_SOURCES = async_serv.c main.c signal_handler.c
+bacteria_DEPENDENCIES = $(top_builddir)/libbacteria/libbacteria.a
+bacteria_LDADD = $(top_builddir)/libbacteria/libbacteria.a
+
+AM_CPPFLAGS = -I$(top_srcdir)/libbacteria/
+target_CPPFLAGS = -I$(top_srcdir)/libbacteria/
+
+
+
 

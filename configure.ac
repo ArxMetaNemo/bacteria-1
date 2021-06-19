@@ -3,10 +3,10 @@
 
 AC_PREREQ([2.69])
 AC_INIT([bacteria], [0.1], [bug@sportloto.i2p])
-AC_CONFIG_SRCDIR([src/macros.h])
+AC_CONFIG_SRCDIR([libbacteria/macros.h])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
-
+AC_PROG_RANLIB([RANLIB])
 # Checks for programs.
 AC_PROG_CC
 
@@ -33,5 +33,6 @@ AC_CHECK_FUNCS([bzero inet_ntoa socket])
 AC_CONFIG_FILES([
 		 Makefile
                  src/Makefile
+		 libbacteria/Makefile
 		 ])
 AC_OUTPUT
