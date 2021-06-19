@@ -16,5 +16,11 @@ struct cryptocoin * init_cryptocoins(const char *);
 void dump_cryptocoins(struct cryptocoin* cryptocoins);
 void clear_cryptocoins(struct cryptocoin * cryptocoins);
 
+
+
 typedef unsigned int uint;
+uint getCountCryptocoins(void);
+uint setCountCryptocoins(uint);
 static uint count_cryptocoins=0;
+
+

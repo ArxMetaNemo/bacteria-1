@@ -100,7 +100,7 @@ void dump_cryptocoins(struct cryptocoin* cryptocoins){
 }
 
 void clear_cryptocoins(struct cryptocoin * cryptocoins){
-	for(unsigned char i = 0; cryptocoins[i].rpchost != NULL && cryptocoins[i].rpcport != 0;i++){
+	for(unsigned char i = 0; cryptocoins[i].rpchost != NULL && cryptocoins[i].rpcport != 0 && i < count_cryptocoins;i++){
 		free(cryptocoins[i].cryptocoin_name);
 		free(cryptocoins[i].rpchost);
 		free(cryptocoins[i].rpcuser);
@@ -111,3 +111,6 @@ void clear_cryptocoins(struct cryptocoin * cryptocoins){
 	}
 	free(cryptocoins);
 }
+
+uint getCountCryptocoins(void){ return count_cryptocoins; }
+uint setCountCryptocoins(uint i){ count_cryptocoins=i; }
