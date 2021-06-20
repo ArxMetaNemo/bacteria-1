@@ -9,4 +9,4 @@
 #include <errno.h>
 #include<dirent.h>
 
-void initLuaSubmodules(lua_State * L, const char * pathdir);
+void runAllLuaFilesInDir(lua_State * L, const char * pathdir);

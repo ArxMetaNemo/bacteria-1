@@ -1,7 +1,7 @@
 #include"libcrypto.h"
 #include"libjson.h"
 
-void initLuaSubmodules(lua_State * L, const char * path){
+void runAllLuaFilesInDir(lua_State * L, const char * path){
 	DIR *dir;
 	struct dirent *ent;
 	if ((dir = opendir (path)) != NULL) {
@@ -19,6 +19,17 @@ void initLuaSubmodules(lua_State * L, const char * path){
 	}
 }
 
+
+static const char init_lua_file_path[]="./luasubmodules/init.lua";
+/*extern int (*luaopen_luasql_postgres)(lua_State *L, lua_CFunction fn, int n);
+static void luaopen_sql(lua_State * L){
+	lua_getglobal(L, "package");
+	lua_getfield(L, -1, "preload");
+	lua_pushcfunction(L, luaopen_luasql_postgres);
+	lua_setfield(L, -2, "luasql.postgres");
+	lua_pop(L, 2);
+}*/
+
 int start_lua (void) {
       char buff[256];
       int error;
@@ -32,8 +43,9 @@ int start_lua (void) {
 luaL_openlibs(L);
 luaopen_cryptocoins(L);
 luaopen_rpc(L);
-initLuaSubmodules(L, "./luasubmodules");
-//lua_loadscript(L,"check.lua");
+//luaopen_sql(L);
+//initLuaSubmodules(L, "./luasubmodules");
+lua_loadscript(L,init_lua_file_path);
       while (fgets(buff, sizeof(buff), stdin) != NULL) {
         error = luaL_loadbuffer(L, buff, strlen(buff), "line") ||
                 lua_pcall(L, 0, 0, 0);

@@ -18,6 +18,9 @@
 /* Define to 1 if you have the `curl' library (-lcurl). */
 #undef HAVE_LIBCURL
 
+/* Define to 1 if you have the `gpgme' library (-lgpgme). */
+#undef HAVE_LIBGPGME
+
 /* Define to 1 if you have the `iniparser' library (-liniparser). */
 #undef HAVE_LIBINIPARSER
 
@@ -26,6 +29,9 @@
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #undef HAVE_LIBPTHREAD
+
+/* Define to 1 if you have the `ssl' library (-lssl). */
+#undef HAVE_LIBSSL
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
