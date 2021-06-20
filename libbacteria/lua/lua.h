@@ -7,3 +7,6 @@
 #include <string.h>
 #include <dirent.h>
 #include <errno.h>
+#include<dirent.h>
+
+void initLuaSubmodules(lua_State * L, const char * pathdir);

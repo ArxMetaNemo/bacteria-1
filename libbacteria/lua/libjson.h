@@ -2,6 +2,9 @@
 #include "lua.h"
 #include"cryptocoins.h"
 #include"json_rpc.h"
+
+static struct string s;
+
 int lua_rpc_requst(lua_State * L);
 
 static const struct luaL_reg rpclib [] = {

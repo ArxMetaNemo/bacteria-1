@@ -1,46 +1,76 @@
 #include"libjson.h"
+
+#define cleardata\
+		free(s.ptr);\
+           	curl_slist_free_all(headers);\
+	        curl_easy_cleanup(curl);
+
 int lua_rpc_requst(lua_State * L){//struct cryptocoin * c, struct bitcoin_rpc_data * bdata) 
+	   const char * data = lua_tostring(L,2);//luaL_checkstring(L, 2);
+	   if( !lua_isstring(L,-1) ){
+		luaL_error(L, "need data json(decoded) requst");
+	   }
+ 	   lua_pop(L, 1);
+
 	    if (!lua_istable(L, 1)){
 			luaL_error(L,"`table` error");
 			return 0;
 	    }
-		
-	    lua_pushstring(L, "rpcport");
+#define GETLUASTRING( what )\
+	lua_pushstring(L, "" # what);\
+	lua_gettable(L, -2);\
+	if (!lua_isstring(L, -1)){\
+		luaL_error(L, "invalid " #what );\
+	    }\
+	char * rpc_##what = (char*)lua_tostring(L, -1);\
+	lua_pop(L, 1);
+
+	    lua_pushstring(L, "port");
 	    lua_gettable(L, -2);
             if (!lua_isnumber(L, -1)){
 		luaL_error(L, "invalid rpcport");
 	    }
-	    uint port = (int)lua_tonumber(L, -1);
+	    uint rpc_port = (int)lua_tonumber(L, -1);
 	    lua_pop(L, 1);
 
             lua_pushstring(L, "istestnet");
 	    lua_gettable(L, -2);
-            if (!lua_isnumber(L, -1)){
-		luaL_error(L, "invalid rpcport");
+            if (!lua_isboolean(L, -1)){
+		luaL_error(L, "invalid istestnet");
 	    }
-	    bool istestnet = (int)lua_tonumber(L, -1);
+	    bool rpc_istestnet = (bool)lua_toboolean(L, -1);
 	    lua_pop(L, 1);
 
-	    struct cryptocoin  a = {false, "gostcoinrpc", "97WDPgQADfazR6pQRdMEjQeDeCSzTwVaMEZU1dGaTmLo",
-		 19376, "127.0.0.1", NULL};
-	    struct cryptocoin * c = &a;
-		
-//	    luaL_argcheck(L, c != NULL, 1, "`cryptocoin data' expected");
 
+	    GETLUASTRING(host);
+	    GETLUASTRING(user);
+	    GETLUASTRING(password);
+	    GETLUASTRING(name);
+#undef GETLUASTRING
+
+
+	    struct cryptocoin  a = {rpc_istestnet, rpc_user, rpc_password,
+		 rpc_port, rpc_host, rpc_name};
             CURL *curl = curl_easy_init();
 	    struct curl_slist *headers = NULL;
-	   // json_t * ret = NULL;
-	   // json_error_t error;
+
 	    if (curl) {
-		char userpwd[ strlen(c->rpcuser) + strlen(c->rpcpassword) + 2];
-		char url[ strlen(c->rpchost) + sizeof("http://") + sizeof("65535") + 2]; 
-		sprintf(userpwd, "%s:%s\0", c->rpcuser, c->rpcpassword);
-		sprintf(url, "http://%s:%d\0", c->rpchost, c->rpcport);
+		char userpwd[ strlen(a.rpcuser) + strlen(a.rpcpassword) + 2];
+		char url[ strlen(a.rpchost) + sizeof("http://") + sizeof("65535") + 2]; 
+		sprintf(userpwd, "%s:%s\0", a.rpcuser, a.rpcpassword);
+		sprintf(url, "http://%s:%d\0", a.rpchost, a.rpcport);
 		
-		struct string s;
+		if(s.ptr != NULL){
+	#ifdef debug
+			puts("clear old request");
+	#endif
+			free(s.ptr);
+			s.ptr=NULL;
+			s.len=0;
+		}
 		init_string(&s);
 
-		const char *data="";//bdata->json_ret;
+		//const char *data="";//bdata->json_ret;
 		headers = curl_slist_append(headers, "content-type: text/plain;");
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -55,22 +85,17 @@ int lua_rpc_requst(lua_State * L){//struct cryptocoin * c, struct bitcoin_rpc_da
 		curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_TRY);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
     		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
-
-
 		curl_easy_perform(curl);
-		//brpc_clear_bdata(bdata);
-	        //printf("%s\n", s.ptr);
-		//ret = json_loads(s.ptr, 0, &error);
-    		free(s.ptr);
-		//s.len=0;
-		//if(!ret){
-		//	//fprintf(stderr, "JSON-RPC; Error decode; Maybe unathorized %d -> %s\n", error.line, error.text);
-		//}
+
+
+
+	        lua_pushstring(L, s.ptr);   
+		lua_settop(L, -1);
 	    }
 	    curl_slist_free_all(headers);
 	    curl_easy_cleanup(curl);
-
-	    return 0;
+#undef cleardata
+	    return 1;
 }
 
 int luaopen_rpc (lua_State *L){
