@@ -14,7 +14,7 @@ int main(int argc, char ** argv){
 	if(argc != 3) return eprintf("%s host port\n", argv[0], argv[1], argv[2]);
 
 	struct cryptocoin * cryptocoins = init_cryptocoins("cryptocoins.ini");
-	dump_cryptocoins(cryptocoins);
+	//dump_cryptocoins(cryptocoins);
 	example();
 
 	/*
