@@ -1,6 +1,70 @@
-# Bacteria
-...
-# Depencies
-Debian 10:
+WmWmBmBmBmmmmmmmm#mm###########U#Z#Z#ZZZZZZZZXXXXX
+mmmmmmmmmmmmmm############Z#ZZUZZZZZZZZZZZZXXXXXXX
+WmmBmmmmmmmmmm########Z#Z#ZZZ#ZZ#Z#ZZZZZZZXZXXXXX2
+mmBmmmmmmmmm########Z##U#Z#o#Z#ZZZZZZZZZXZXXXXXSS2
+Bmmmmmmmmmm#######Z##UZ#Z#Zn#ZZZ#ZZZZZZXZXXXXXX22S
+mmmmmmmmmm#######dU#Z#Z#Z#ZnZZ#ZZZZZZZXZXZXXXXSS22
+mmmmmmmm########Ue#Z#Z#Z#ZXv#ZZZZZZXZXZXXXXXXS2SSS
+mmmmmm#######Z#Z#h3#Z#Z#ZZ2nZZZZZZXXZXZXXXXXS2S222
+mmmm#########mX#UZnZ#Z#ZZ#znZZZZZXZXZXXXXXXSS22oon
+mm##m######Z#ZXX#ZeXZZUZUZsnZZZZZXXXZXXXXXSS2Sooon
+#########Z##Z#mnUZhvZ#ZZZZlnZZZZXZXZXXXSSSS2S222on
+m#######UmXZ#ZZXXZZvXZZZZZlnZZZXmXXXXXSSSS2S2S2oon
+mZ####Z#ZZhXZ##ZnXZcnZZUZnvnZZZXZXXXXSX2S2X2S22222
+###UUU#U##Zh3#XUo2X1vX##ZonXXSnWSX1qXoXSSS2S2222oS
+#UZ#Z#ZZUZUZ63ZZZ3zvIXXdSXd#XoXZX1wXoXS2S22n222o2o
+##UZ#Z#UZZ#ZZo3mXooonX12o2So2XZ#1v#nXS2S21nS22o2oo
+#Z#Z#Z#ZZ#ZZZZzImpvS1nnooS22SSX1<#S2SSSesoSo2o2ooo
+Z#Z#ZUZZUZZZZZZcv$onnnnnooXSo1l|3##oX2iv222o2ooonn
+#ZUZZZZ#XZZZZZZmidoXXXnnoXZnvi|i2noXiiu222o2oooonn
+UZZZ#ZZZZZZZZZZWznX##SnoX##Xvi|3ZplivnSo2o2ooonnnv
+ZZUZZZZZZZZZZZm#vX#mU2ooX#mpiiiXX#vv222S22n1nvnnvn
+#ZZXXXXXmXXXXXZSvX##ZSo2X#WBmuomXXXooS21Ilvnnnnvnv
+ZZZZXXXouYSU##X2nX#ZXoooX#mWWWW#SXd2Ilisnnnnnnvnvv
+ZZXZXZXXXXov>I1nnXZZXonnSZmWWWm#S2S1ivnnnnnnnvvvvv
+ZXXXZXXXXXXXXaiivSZXSnvnoXmmWmB#SSSouXnnnnnvvvvvvI
+ZXZXXXXXXXXXSXsiinoXovvvnXZmmmmZSSS##XnnnnvnvvvvII
+XXXXXX211Iii|iovvoXXmlvvvoXX##ZX22XXZ2nnvvvvvvvlIl
+XXXSoooXooouuaXXXXS11lIIvnnoXSSooSSXZ2nvvnvvvIllll
+XXSSXXX2XSSSSXXY1l||illIIvvnooono2X#ZnvvvvvIIIllli
+XSS2S2S2S2222nlIi|||iilllvvvnnnnn2XoSvvvvvlIllllii
+X2S2S2S222SoIi|vi||iiiillllvvnwonnnSoonIvllllliiii
+S2S2222222Isvoo2vioviiiiiillloXXviivI12nvlllliiii|
+S2222222on22o2ooooXmo||i|ii|iInZ%ivXvIlI1niliii|i|
+22o222o22ooooooooXd#1|||||||+=IXz|IvoIllli1vii|i||
+222o2ooooooooonoXnB}||||||+||||IS|ivooiliiiii|i|||
+ooooooooooonnnnnSZ1|=|+|=++|+|+inzliv2ziiii||i||||
+oooooononnnnnnvoZ1z|=vi%++|iwc+vvolliIo%i|i|||||||
+ooonnnnnnnvnvvnm1n1|%vvv>+lnXe>vlvciiiIn%i||||||+|
+nnnnnnvnvvvvvvXCvviivIIli|lvXzlisivii|i|1%||||||+|
+nnnvvvvvvvvvvXevIvivllIliiinXzi|sii|i||||i|||+|+|+
+nnvvnvvvvvvvv2lIvllllllliiivX1iiv||i||||||||+|+|=+
+nvvvvvvvvvIvvlIlvillliiiiiiiXc||ii||||||||+|+|++|+
+onvvIvIIlllllllllliliiiiiiiiXci|ii||||||+|+|++|+=+
+vvvIIlllIllllilliiiiiiiiii|i3c||||||||+|+|++|+++++
+lIIlllllliliiliiiiii|i||i|||3c|||||+|+|++|=|=++++=
+llllliliiiiiiiii|i|i||i|||||{c||+|+|+++|++++++++=+
+Iiiiiiiiiiiii|i|i|||||||||||i(|+|+|++|++++++++=+==
+liiiiiiii|i||i|||||||||||||+|||+|+++|=++++++=+=+==
+iiii|i|||i||||||||||||||+|+|++++++|=++++++=+=+====
+i|||i||i|||||||||||+|+|=|++|+|+|+++++++=+=+=======
 
-sudo apt install lua-sql-postgres-dev automake gcc liblua5.2-dev libjansson-dev libcurl4-gnutls-dev libiniparser-dev
+--------------------------------------------------
+
+¤Bacteria¤
+
+TODO(for now):
+	- async/sync crypto for libbacteria for server and lua script 
+	- libgd for images
+	- pre-init postgres database and C code for works with it, and lua module for work with it
+	- own network protocol idea.
+	- create server
+	- create lua scripts for events.
+	- continue work with cryptocoins RPC wallets in server
+	- create exchange (cryptocoin)crypto on crypto system by 2 client.
+	- create ....(have to be changed every 8 tasks)[like in stack of 8 tasks]
+	
+Depencies -
+	Debian 10:
+		sudo apt install lua-sql-postgres-dev automake gcc liblua5.2-dev libjansson-dev libcurl4-gnutls-dev libiniparser-dev
+	
