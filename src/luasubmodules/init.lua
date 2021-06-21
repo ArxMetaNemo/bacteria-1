@@ -26,12 +26,3 @@ end
 tgst = bacteria.coins['tgst']
 tdash = bacteria.coins['tdash']
 check_leak_memory(tgst,tdash)
-
-
-
-
-
-
-
-
-

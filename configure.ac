@@ -18,7 +18,7 @@ AC_CHECK_LIB([iniparser], [main])
 AC_CHECK_LIB([jansson], [main])
 AC_CHECK_LIB([curl], [main])
 AC_CHECK_LIB([ssl], [main])
-AC_CHECK_LIB([gpgme], [main])
+#AC_CHECK_LIB([gpgme], [main])
 AC_CHECK_LIB([crypto], [main])
 CFLAGS="$CFLAGS -g"
 

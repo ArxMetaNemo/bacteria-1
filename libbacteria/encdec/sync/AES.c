@@ -1,5 +1,13 @@
 #include"AES.h"
 
+
+
+/*
+unsigned char *p_str = "82019154470699086128524248488673846867876336512717";
+BIGNUM *p = BN_bin2bn(p_str, sizeof(p_str), NULL);
+BN_free(p);
+*/
+
 int 
 AES_any_decrypt(aes_enctype enc,unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
             unsigned char *iv, unsigned char *plaintext)
@@ -95,25 +103,41 @@ AES_any_encrypt(aes_enctype enc,unsigned char *plaintext, int plaintext_len, uns
 
 CREATEAESALGO(AES_256_cbc, EVP_aes_256_cbc);
 CREATEAESALGO(AES_256_ecb, EVP_aes_256_ecb);
+CREATEAESALGO(chacha20_poly1305,EVP_chacha20_poly1305);
 
-
+void generate_rand_bytes(size_t len, unsigned char * key){
+	srand(time(NULL));
+	for(unsigned int i = len-1;i--;){
+		key[i] = rand() % 200;
+	} 
+}
 
 
 int 
 main(int count, char ** values){
+
+	
     /*
      * Set up the key and iv. Do I need to say to not hard code these in a
      * real application? :-)
      */
-    if(count != 5){
-	return fprintf(stderr,"%s msg key iv ENCType(2,4,2|4[6])\n",values[0]);
+    if(count != 3){
+	return fprintf(stderr,"%s msg ENCType(2,4,8 (2|4[6]),(2|4|8[14]) )\n",values[0]);
     }
     unsigned char key[32];
     unsigned char iv[16];
-    memcpy(key, values[2], sizeof(key));
-    memcpy(iv, values[3], sizeof(iv));
 
-    unsigned int enctype = atoi(values[4]);
+    generate_rand_bytes(sizeof(key),key);
+    generate_rand_bytes(sizeof(iv),iv);
+
+    printf("Key is:%s\n",key);
+
+  //  memcpy(key, values[2], sizeof(key));
+  //  memcpy(iv, values[2], sizeof(iv));
+   
+
+
+    unsigned int enctype = atoi(values[2]);
 
     /* A 256 bit key */
    // unsigned char *key = (unsigned char *)"01234567890123456789012345678901";
@@ -136,47 +160,11 @@ main(int count, char ** values){
     unsigned char decryptedtext[128];
 
     int decryptedtext_len, ciphertext_len;
+    puts("Enc");
 
-    if( (enctype&t_cbc) == t_cbc ){
-	puts("t_cbc");
-	ciphertext_len = AES_256_cbc_encrypt (plaintext, strlen ((char *)plaintext), key, iv,
-                              ciphertext);
-	/* Do something useful with the ciphertext here */
-	printf("Ciphertext is:\n");
-        BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
-    	/* Decrypt the ciphertext */
-    	decryptedtext_len = AES_256_cbc_decrypt(ciphertext, ciphertext_len, key, iv,
-                                decryptedtext);
-    	/* Add a NULL terminator. We are expecting printable text */
-    	decryptedtext[decryptedtext_len] = '\0';
-  	  /* Show the decrypted text */
-  	printf("Decrypted text is:\n");
-  	printf("%s\n", decryptedtext);
-    }
-    if( (enctype&t_ecb) == t_ecb ){
-	puts("t_ecb");
-	ciphertext_len = AES_256_ecb_encrypt (plaintext, strlen ((char *)plaintext), key, iv,
-                              ciphertext);
-	/* Do something useful with the ciphertext here */
-	printf("Ciphertext is:\n");
-        BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
-    	/* Decrypt the ciphertext */
-    	decryptedtext_len = AES_256_ecb_decrypt(ciphertext, ciphertext_len, key, iv,
-                                decryptedtext);
-    	/* Add a NULL terminator. We are expecting printable text */
-    	decryptedtext[decryptedtext_len] = '\0';
-  	  /* Show the decrypted text */
-  	printf("Decrypted text is:\n");
-  	printf("%s\n", decryptedtext);
-    }
-
-    /* Encrypt the plaintext */
-    
-
-
-
-
-
+    CHECKTYPE(cbc,AES_256_cbc);
+    CHECKTYPE(ecb,AES_256_ecb);
+    CHECKTYPE(chacha20,chacha20_poly1305);
 
     return 0;
 
