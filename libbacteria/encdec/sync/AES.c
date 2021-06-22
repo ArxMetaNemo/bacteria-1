@@ -1,4 +1,4 @@
-#include"AES.h"
+#include"encdec/AES.h"
 
 
 
@@ -113,8 +113,9 @@ void generate_rand_bytes(size_t len, unsigned char * key){
 }
 
 
-int 
-main(int count, char ** values){
+
+static int 
+libbacteria_AES_test(int count, char ** values){
 
 	
     /*

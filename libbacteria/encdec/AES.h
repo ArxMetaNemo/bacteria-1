@@ -21,7 +21,7 @@ int prename ## _encrypt(unsigned char *plaintext, int plaintext_len, unsigned ch
 int prename ## _decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,\
             unsigned char *iv, unsigned char *plaintext);
 
-#define HANDLERRSSL() { ERR_print_errors_fp(stderr);abort(); }
+#define HANDLERRSSL() { ERR_print_errors_fp(stderr);return -1; }
 
 
 #define CHECKTYPE(whose,algo)\

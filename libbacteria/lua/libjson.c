@@ -101,5 +101,4 @@ int lua_rpc_requst(lua_State * L){//struct cryptocoin * c, struct bitcoin_rpc_da
 int luaopen_rpc (lua_State *L){
       luaL_openlib(L, "rpc", rpclib, 0);
       return 1;
-
 }

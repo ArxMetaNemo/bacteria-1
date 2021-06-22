@@ -1,18 +1,5 @@
-#include<openssl/crypto.h>
-#include <openssl/evp.h>
-
-#include<stdio.h>
-#include<string.h>
-
-#define LENKEY 32
+#include"encdec/x25519.h"
 static size_t len_key = LENKEY;
-struct keysPair{
-	EVP_PKEY * privKey;	//, *pubKey ;
-	unsigned char pubKey[LENKEY+1];
-	EVP_PKEY_CTX * pKeyCtx;//just ctx
-};
-
-
 struct keysPair createKeyPair(const uint8_t * priv, const uint8_t * pub){
 	struct keysPair ret;
 	bzero(ret.pubKey,sizeof(ret.pubKey));
@@ -22,23 +9,37 @@ struct keysPair createKeyPair(const uint8_t * priv, const uint8_t * pub){
 		return ret;
 	}
 	EVP_PKEY * privKey = EVP_PKEY_new_raw_private_key (EVP_PKEY_X25519, NULL, priv, len_key);
-       	EVP_PKEY_get_raw_public_key(privKey, ret.pubKey, &len_key);
+	getRawPubKey(privKey, ret.pubKey);
+       	//EVP_PKEY_get_raw_public_key(privKey, ret.pubKey, &len_key);
 	ret.privKey = privKey;
 	//ret.pubKey = pubKey;
 	ret.pKeyCtx=ctx;
 	return ret;
 }
 
+void getRawPrivKey(EVP_PKEY * privKey, uint8_t * priv){
+	EVP_PKEY_get_raw_private_key(privKey, priv, &len_key);
+}
+void getRawPubKey(EVP_PKEY * privKey, uint8_t * pub){
+	EVP_PKEY_get_raw_public_key(privKey, pub, &len_key);
+}
+
+
 void freeKeyPair(struct keysPair * pair){
 	EVP_PKEY_CTX_free( pair->pKeyCtx );
 	EVP_PKEY_free(pair->privKey);
 //	EVP_PKEY_free(pair->pubKey);
 }
+void freeSharedKey(uint8_t * w){
+	if(w!=NULL)
+		OPENSSL_free(w);
+}
+
 void freeSharedKeys(uint8_t * w, ...){
 	va_list ap;
 	va_start(ap,w);
 	while(*w){
-		OPENSSL_free(w);
+		freeSharedKey(w);
 	}
 	va_end(ap);
 }
@@ -110,7 +111,7 @@ uint8_t * getSharedKey( struct keysPair * pair, const uint8_t * pubPeer, size_t 
 	return ret;
 }
 
-int test(void){
+static int x25519_bacteria_test(void){
 	struct keysPair pair = generateKeyPair();
 	struct keysPair pair1 = generateKeyPair();
 	if(pair.pKeyCtx == NULL || pair1.pKeyCtx == NULL ) {
@@ -130,8 +131,4 @@ int test(void){
 	freeKeyPair(&pair);freeKeyPair(&pair1);
 }
 
-int main(void){
-	puts("Start test");
-	test();
-	puts("Test is done");
-}
+

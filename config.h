@@ -22,9 +22,6 @@
 /* Define to 1 if you have the `curl' library (-lcurl). */
 #define HAVE_LIBCURL 1
 
-/* Define to 1 if you have the `gpgme' library (-lgpgme). */
-#define HAVE_LIBGPGME 1
-
 /* Define to 1 if you have the `iniparser' library (-liniparser). */
 #define HAVE_LIBINIPARSER 1
 

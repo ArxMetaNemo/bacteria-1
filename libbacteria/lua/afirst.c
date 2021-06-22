@@ -1,5 +1,6 @@
 #include"libcrypto.h"
 #include"libjson.h"
+#include"libencdec.h"
 
 void runAllLuaFilesInDir(lua_State * L, const char * path){
 	DIR *dir;
@@ -43,6 +44,7 @@ int start_lua (void) {
 luaL_openlibs(L);
 luaopen_cryptocoins(L);
 luaopen_rpc(L);
+luaopen_encdec(L);
 //luaopen_sql(L);
 //initLuaSubmodules(L, "./luasubmodules");
 lua_loadscript(L,init_lua_file_path);
