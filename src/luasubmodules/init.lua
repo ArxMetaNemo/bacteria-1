@@ -55,7 +55,7 @@ local function addChar(ch,time)
 end
 msg=msg .. addChar("s",666)
 
-b=bacteria_aes.new("mysmallkey")
+b=bacteria_aes.new() --("mysmallkey") -- ("mykey","myiv") 32,16 bytes
 print("key:", b:getKey(), "IV: ",b:getIV())
 local function checkAllTypes(b,msg)
 --	b:encrypt(msg)

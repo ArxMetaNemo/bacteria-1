@@ -43,18 +43,20 @@ int lua_AESenc (lua_State *L){
 	if(size_msg == 0) return 0;
 	unsigned char * ciphertext = (unsigned char*)malloc(size_msg*sizeof(char));
 	if(ciphertext == NULL) return 0;
-#ifdef DEBUG
+#ifdef DEBUGAES
 	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ENC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 #endif
+
 	INITENCTYPE(cbc,AES_256_cbc)else
  	INITENCTYPE(ecb,AES_256_ecb)else
  	INITENCTYPE(chacha20,chacha20_poly1305)else
 	return 0;
 	ciphertext[ciphertext_len]='\0';
+
+#ifdef DEBUGAES
 	for(unsigned int i = 0; i< ciphertext_len;i++){
 		printf("%d ",ciphertext[i]);
 	}
-#ifdef DEBUG
 	printf("\n\n\n");
 	printf("\n\n\n");
 	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
@@ -75,9 +77,11 @@ int lua_AESenc (lua_State *L){
 	  	plaintext_len = algo##_decrypt (in->data, in->size, key, iv, plaintext);\
 	 }
 int lua_AESdec (lua_State *L){
-#ifdef DEBUG
+
+#ifdef DEBUGAES
 	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DEC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 #endif
+
 	char * key = (char*)luaL_checkstring(L, 1);
 	char * iv = (char*)luaL_checkstring(L, 2);
 	struct lua_AESData *in = (struct lua_AESData *)lua_touserdata(L, 3);
@@ -88,13 +92,15 @@ int lua_AESdec (lua_State *L){
 	int plaintext_len;
 	char * plaintext = (char*)malloc(in->size*sizeof(char));
 	if(plaintext == NULL) return 0;
-#ifdef DEBUG
+
+#ifdef DEBUGAES
 	for(unsigned int i = 0; i< in->size;i++){
 		printf("%d ",in->data[i]);
 	}
 	printf("\n\n\n");
 	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 #endif
+
 	INITDECTYPE(cbc,AES_256_cbc)else
  	INITDECTYPE(ecb,AES_256_ecb)else
  	INITDECTYPE(chacha20,chacha20_poly1305)else
