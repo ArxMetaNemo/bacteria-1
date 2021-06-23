@@ -41,25 +41,30 @@ int lua_AESenc (lua_State *L){
 	int ciphertext_len;
 	int size_msg = strlen(plaintext);
 	if(size_msg == 0) return 0;
-	char * ciphertext = (char*)malloc(size_msg*sizeof(char));
+	unsigned char * ciphertext = (unsigned char*)malloc(size_msg*sizeof(char));
 	if(ciphertext == NULL) return 0;
-
+#ifdef DEBUG
+	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ENC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+#endif
 	INITENCTYPE(cbc,AES_256_cbc)else
  	INITENCTYPE(ecb,AES_256_ecb)else
  	INITENCTYPE(chacha20,chacha20_poly1305)else
 	return 0;
 	ciphertext[ciphertext_len]='\0';
-
-//        lua_pushnumber(L, ciphertext_len);
+	for(unsigned int i = 0; i< ciphertext_len;i++){
+		printf("%d ",ciphertext[i]);
+	}
+#ifdef DEBUG
+	printf("\n\n\n");
+	printf("\n\n\n");
+	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+#endif
 	if(ciphertext_len<0){ fprintf(stderr,"Error openssl. see logs.\n");return 0;}
-
-
 	size_t nbytes = sizeof(struct lua_AESData) + (ciphertext_len - 1)*sizeof(size_t) + sizeof(char*);
 	struct lua_AESData * ret = (struct lua_AESData *)lua_newuserdata(L, nbytes);
 	ret->size=ciphertext_len;
 	ret->data=ciphertext;
 	return 1;
-
 //      lua_pushstring(L, ciphertext);
 //	free(ciphertext);
 //	return 2;
@@ -70,6 +75,9 @@ int lua_AESenc (lua_State *L){
 	  	plaintext_len = algo##_decrypt (in->data, in->size, key, iv, plaintext);\
 	 }
 int lua_AESdec (lua_State *L){
+#ifdef DEBUG
+	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~DEC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+#endif
 	char * key = (char*)luaL_checkstring(L, 1);
 	char * iv = (char*)luaL_checkstring(L, 2);
 	struct lua_AESData *in = (struct lua_AESData *)lua_touserdata(L, 3);
@@ -80,8 +88,13 @@ int lua_AESdec (lua_State *L){
 	int plaintext_len;
 	char * plaintext = (char*)malloc(in->size*sizeof(char));
 	if(plaintext == NULL) return 0;
-
-
+#ifdef DEBUG
+	for(unsigned int i = 0; i< in->size;i++){
+		printf("%d ",in->data[i]);
+	}
+	printf("\n\n\n");
+	printf("\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+#endif
 	INITDECTYPE(cbc,AES_256_cbc)else
  	INITDECTYPE(ecb,AES_256_ecb)else
  	INITDECTYPE(chacha20,chacha20_poly1305)else
@@ -89,6 +102,9 @@ int lua_AESdec (lua_State *L){
 
 	plaintext[plaintext_len]='\0';
 	if(plaintext_len<0){ fprintf(stderr,"Error openssl. see logs.\n");return 0;}
+
+
+
 	/*if(in->data!=NULL){
 		free(in->data);
 	}
@@ -106,17 +122,19 @@ int lua_AESdec (lua_State *L){
 //	free(plaintext);
 //	return 2;
 }
-INITLUAFUNC(createAESData){
+
+
+
+ 
+INITLUAFUNC(createAESData) {
 	unsigned char * data = (unsigned char*)luaL_checkstring(L, 1);
-	size_t size = (size_t)luaL_checknumber(L, 2);
-	size_t nbytes = sizeof(struct lua_AESData) + (size - 1)*sizeof(size_t) + sizeof(char*);
+	long long size = (long long)luaL_checknumber(L, 2);
+	size_t nbytes = sizeof(struct lua_AESData) + (size - 1)*sizeof(size_t) + sizeof(unsigned char*);
 	struct lua_AESData * ret = (struct lua_AESData *)lua_newuserdata(L, nbytes);
 	ret->size=size;
-	ret->data=(char*)malloc(size*sizeof(char));
-	memcpy(ret->data, data, size);
-	(*ret).data[size]=0;
+	ret->data=(unsigned char*)malloc(size*sizeof(unsigned char));
+	strncpy(ret->data, data, size); 
 	return 1;
-	
 }
 
 INITLUAFUNC(getAESData){

@@ -7,6 +7,10 @@ bacteria_aes = require (submoduledir .. "bencdec")
 bacteria.init("cryptocoins.ini",{'tgst','tdash'})
 bacteria.dumpCryptocoins()
 
+function extended (child, parent)
+    setmetatable(child,{__index = parent}) 
+end
+
 
 function sleep (a) 
     local sec = tonumber(os.clock() + a); 
@@ -38,12 +42,48 @@ check_leak_memory(tgst,tdash)
 
 
 -- example in luasubmodules/bencdec.lua
-key,iv=bacteria_aes.genKeyIV()
-msg="Hello AES_ECB, AES_CBC, ChaCha20!" 
-bacteria_aes.SyncCryptoExample( function() 
-	return msg
-end)
+--key,iv=bacteria_aes.genKeyIV()
 
+msg="Hello AES_ECB, AES_CBC, ChaCha20! "
+local function addChar(ch,time)
+	ret=""
+	while time > 0 do
+		ret = ret .. ch
+		time = time - 1
+	end
+	return ret
+end
+msg=msg .. addChar("s",666)
 
+b=bacteria_aes.new("mysmallkey")
+print("key:", b:getKey(), "IV: ",b:getIV())
+local function checkAllTypes(b,msg)
+--	b:encrypt(msg)
+--	b:decrypt( b:getAESData_rawEnc() )
+--	b:clear()
+	for index, data in pairs(AESENCType) do
+	    --if data ~= AESENCType["t_chacha20"] then
+	    	print(index,data)		
+		b:encrypt(msg,data)
+		b:decrypt( b:getAESData_rawEnc(),data )
+		aesdata_enc,saesdata_enc=b:getAESData_enc()
+		b:decrypt(b:getAESData_rawEnc(), data)
+		aesdata_dec,saesdata_dec=b:getAESData_dec()
+		b:clear()  
+		print("Decrypt msg(from local aesdata, from C): ", aesdata_dec)
+		print("SetAESData")
+		b:setAESData_enc(aesdata_enc,saesdata_enc)
+		print("Decrypt")
+		b:decrypt(b:getAESData_rawEnc(), data)
+		aesdata_dec,saesdata_dec=b:getAESData_dec()
+		print("Decrypt msg(from created aesdata, from lua): ", aesdata_dec)
+	   -- end
+
+	end
+
+	
+end
+
+checkAllTypes(b,"is example message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaafasdjasdjkfsdfjasdfjiaodfasdfjiasdijfasidfadfiaojsdijfoasdfiaojsdfiojasdfijasdfuhasdufhasdiufhasidufashdfiasudhfiasudhfiuasdfihuSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOFSDJKFASDJFASJDFQJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
 

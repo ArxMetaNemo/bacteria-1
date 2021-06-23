@@ -1,117 +1,69 @@
-local baes = { }
+baes = {}
 
--- Test stuff
-local function checkEncryption(msg, t)
-	print("Type:",t)
---	sencrypted,encrypted=encdec.AESenc(key,iv,msg, t)
---	sdecrypted,decrypted=encdec.AESdec(key,iv,encrypted, sencrypted, t)
-	--print("Ecrypted message: ", encrypted, "Size of enc: ", sencrypted)
-	--print("Size of enc: ", sencrypted)
---	print("dEcrypted message: ", decrypted, "Size of dec: ", sdecrypted)
-	print("Encode")
-	aesdata=encdec.AESenc(key,iv,msg,t)
-	seccey = encdec.getAESData(aesdata)
-	print("Crypted message: ", seccey)
-	print("Decode")
-	decdata=encdec.AESdec(key,iv,aesdata,t)
-	print("plaintext: ",encdec.getAESData(decdata))
-	print("Free")
-	encdec.freeAESData(aesdata)
-	encdec.freeAESData(decdata)
-	print("Cycle next")
-end
-local function checkAllTypes(msg)
-	print("New")	
-	sleep(1)
-	checkEncryption(msg, AESENCType['t_ecb'])
-	print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-	checkEncryption(msg, AESENCType['t_cbc'])
-	print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-	checkEncryption(msg, AESENCType['t_chacha20'])
-	print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+function baes:new(key,iv)
+	local obj = {}
+		obj.key=key or encdec.genRandBytes(32)
+		obj.iv=iv   or encdec.genRandBytes(16)
+		obj.aesdata_enc={}
+		obj.aesdata_dec={}
+
+		function obj:getKey()
+			return self.key
+		end
+
+		function obj:getIV()
+			return self.iv
+		end
+		function obj:getAESData_rawEnc()
+			return self.aesdata_enc
+		end
+		function obj:getAESData_rawDec()
+			return self.aesdata_dec
+		end
+		function obj:getAESData_enc()
+			return encdec.getAESData(self.aesdata_enc),encdec.getAESData_len(self.aesdata_enc)
+		end
+
+		function obj:getAESData_dec()
+			return encdec.getAESData(self.aesdata_dec),encdec.getAESData_len(self.aesdata_dec)
+		end
+
+		function obj:setAESData_enc(msg,size)
+			msg = msg or ""
+			size = size or 0
+			encdec.createAESData(msg,size)
+		end
+
+		function obj:encrypt(msg,t)
+			t = t or AESENCType['t_chacha20']
+			self.aesdata_enc=encdec.AESenc(self.key,self.iv,msg,t)
+		end
+		function obj:decrypt(aesdata,t)
+			t = t or AESENCType['t_chacha20']
+			self.aesdata_dec=encdec.AESdec(self.key,self.iv,aesdata,t)
+		end
+
+		function obj:clear()
+				if not obj.aesdata_enc == nil then 
+					encdec.freeAESData(self.aesdata_enc) 
+					self.aesdata_enc = nil
+				end
+				if not obj.aesdata_dec == nil then 
+					encdec.freeAESData(self.aesdata_dec) 
+					self.aesdata_dec = nil
+				end
+		end
+		return obj
 end
 
-function baes.SyncCryptoExample(fn)
-	msg=fn()
-	print("ChaCha20")
-	enc=bacteria_aes.encode_raw(key,iv,msg, AESENCType['t_chacha20'])
-	print("Encrypted msg: ", enc)
-	dec=bacteria_aes.decode_raw(key,iv,enc,AESENCType['t_chacha20'])
-	print("Decrypted msg: ", dec)
-	print("\n\n\n\n\n\n")
-	print("AES_CBC")
-	cbc=bacteria_aes.encrypt_AEScbc(key,iv,msg)
-	ecb=bacteria_aes.encrypt_AESecb(key,iv,msg)
-	print("CBC:",cbc, "ECB:", ecb)
-	print("\n\n\n\n\n\n")
-	print("Decrypted")
-	cbc=bacteria_aes.decrypt_AEScbc(key,iv,cbc)
-	ecb=bacteria_aes.decrypt_AESecb(key,iv,ecb)
-	print("CBC:",cbc, "ECB:", ecb)
-end
---checkAllTypes("is example message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaafasdjasdjkfsdfjasdfjiaodfasdfjiasdijfasidfadfiaojsdijfoasdfiaojsdfiojasdfijasdfuhasdufhasdiufhasidufashdfiasudhfiasudhfiuasdfihuSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOFSDJKFASDJFASJDFQJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+--checkAllTypes("")
 --checkAllTypes("is example message")
 --checkAllTypes("a")
 --checkAllTypes("ab")
 --checkAllTypes("abc")
 --checkAllTypes("abcd")
 -- end test stuff
-
--- GenBytes and later OPENSSL BIGNUM(becase 0.00001 bad zEros=5; sum=1 is good!)
-
--- AESENCType['t_ecb'], AESENCType['t_cbc'], AESENCType['t_chacha20']
-function baes.genRandBytes(len)
-	return encdec.genRandBytes(len)
-end
-
-function baes.genKeyIV()
-	return baes.genRandBytes(32),baes.genRandBytes(16)
-end
-
-
-function baes.decode_raw(key,iv,msg,t)
-	aesdata=encdec.createAESData(msg, string.len(msg))
-	decdata=encdec.AESdec(key,iv,aesdata,t)
-	msg = encdec.getAESData(decdata)
-	encdec.freeAESData(aesdata)
-	encdec.freeAESData(decdata)
-	return msg
-end
-
-function baes.encode_raw(key,iv,msg,t)
-	aesdata=encdec.AESenc(key,iv,msg,t)
-	msg=encdec.getAESData(aesdata)
-	encdec.freeAESData(aesdata)
-	return msg
-end
-
---msg="Hello AES_ECB,AES_CBC,ChaCha20!"
-function baes.encrypt_AEScbc(key,iv,msg)
-	return baes.encode_raw(key,iv,msg,AESENCType['t_cbc'])
-end
-function baes.encrypt_AESecb(key,iv,msg)
-	return baes.encode_raw(key,iv,msg,AESENCType['t_ecb'])
-end
-function baes.encrypt_AESchacha20(key,iv,msg)
-	return baes.encode_raw(key,iv,msg,AESENCType['t_chacha20'])
-end
-
-function baes.decrypt_AEScbc(key,iv,msg)
-	return baes.decode_raw(key,iv,msg,AESENCType['t_cbc'])
-end
-function baes.decrypt_AESecb(key,iv,msg)
-	return baes.decode_raw(key,iv,msg,AESENCType['t_ecb'])
-end
-function baes.decrypt_AESchacha20(key,iv,msg)
-	return baes.decode_raw(key,iv,msg,AESENCType['t_chacha20'])
-end
--- AES and ChaCha20 / async
-
-
-
-
--- x25519
-
 
 
 
