@@ -36,22 +36,13 @@ tgst = bacteria.coins['tgst']
 tdash = bacteria.coins['tdash']
 check_leak_memory(tgst,tdash)
 
+
+-- example in luasubmodules/bencdec.lua
 key,iv=bacteria_aes.genKeyIV()
-msg="Hello AES_CBC,ChaCha20!"
-enc=bacteria_aes.encode_raw(key,iv,msg, AESENCType['t_chacha20'])
-print("Encrypted msg: ", enc)
-dec=bacteria_aes.decode_raw(key,iv,enc,AESENCType['t_chacha20'])
-print("Decrypted msg: ", dec)
-print("\n\n\n\n\n\n")
-print("AES_CBC")
-cbc=bacteria_aes.encrypt_AEScbc(key,iv,"hewwo")
---ecb=bacteria_aes.encrypt_AESecb(key,iv,"hewwo")
-print("CBC:",cbc)
-print("\n\n\n\n\n\n")
-print("Decrypted")
-cbc=bacteria_aes.decrypt_AEScbc(key,iv,cbc)
---ecb=bacteria_aes.decrypt_AESecb(key,iv,cbc)
-print("CBC:",cbc)
+msg="Hello AES_ECB, AES_CBC, ChaCha20!" 
+bacteria_aes.SyncCryptoExample( function() 
+	return msg
+end)
 
 
 
