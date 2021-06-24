@@ -20,6 +20,8 @@ int lua_freeAESData(lua_State *L);
 INITLUAFUNC(getAESData);
 INITLUAFUNC(getAESData_len);
 INITLUAFUNC(createAESData);
+INITLUAFUNC(getPubKey);
+//INITLUAFUNC(setKeyPair);
 
 struct lua_AESData{
 	unsigned char * data;
@@ -40,6 +42,8 @@ static const struct luaL_reg encdeclib [] = {
       {"getAESData", lua_getAESData},
       LUAPAIR(getAESData_len)
       LUAPAIR(createAESData)
+      LUAPAIR(getPubKey)
+//      LUAPAIR(setKeyPair)
       {NULL, NULL}
 };
 int luaopen_encdec (lua_State *L);
