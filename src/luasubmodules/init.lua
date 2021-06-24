@@ -83,26 +83,45 @@ local function checkAllTypes(b,msg)
 
 	
 end
+print("AES check!")
+checkAllTypes(b,"is example message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaafasdjasdjkfsdfjasdfjiaodfasdfjiasdijfasidfadfiaojsdijfoasdfiaojsdfiojasdfijasdfuhasdufhasdiufhasidufashdfiasudhfiasudhfiuasdfihuSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOFSDJKFASDJFASJDFQJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+print("\n\n\n\n\n\n\n\n\n\nx25519 + AES check!\n\n\n\n\n\n\n\n\n\n")
+k1 = bacteria_aes:newKeyPair()
+k2 = bacteria_aes:newKeyPair()
+k1:initKeyPair()
+k2:initKeyPair()
+pub1 = k1:getPubKey()
+pub2 = k2:getPubKey()
+priv2 = k2:getPrivKey()
 
---checkAllTypes(b,"is example message aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaafasdjasdjkfsdfjasdfjiaodfasdfjiasdijfasidfadfiaojsdijfoasdfiaojsdfiojasdfijasdfuhasdufhasdiufhasidufashdfiasudhfiasudhfiuasdfihuSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOFSDJKFASDJFASJDFQJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-k1 = bacteria_aes.newKeyPair()
-k2 = bacteria_aes.newKeyPair()
-k1.initKeyPair()
-k2.initKeyPair()
-pub1 = k1.getPubKey()
-pub2 = k2.getPubKey()
+
+
+k3 = bacteria_aes:newKeyPair()
+k3:initKeyPair(pub2,priv2)
 --print("Pub1: ", pub1)
+--print("Priv2: ", priv2)
 --print("Pub2: ", pub2)
-shared0=k1.getSharedKey(pub2)
-shared1=k2.getSharedKey(pub1)
+
+pub3 = k3:getPubKey()
+priv3 = k3:getPrivKey()
+
+--print("Pub3: ", pub3)
+--print("Priv3: ", priv3)
+
+shared0=k1:getSharedKey(pub2)
+shared1=k2:getSharedKey(pub1)
+shared2=k3:getSharedKey(pub1)
 --print("Shared0:", shared0)
 --print("Shared1:", shared1)
 
-aes1=bacteria_aes.new(shared0, "123456789012345")
-aes=bacteria_aes.new(shared1, "123456789012345")
+aes1=bacteria_aes:new(shared0, "123456789012345")
+aes=bacteria_aes:new(shared1, "123456789012345")
 aes1:encrypt("TestMsg W10013291825328197ASHFASDF8932ASDF8532BUSAFD893251BSDFA78532BFW783125HBSFAD789aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaafasdjasdjkfsdfjasdfjiaodfasdfjiasdijfasidfadfiaojsdijfoasdfiaojsdfiojasdfijasdfuhasdufhasdiufhasidufashdfiasudhfiasudhfiuasdfihuSOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOFSDJKFASDJFASJDFQJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 --print("Encrypted")
 aes:decrypt(aes1:getAESData_rawEnc())
 aesdata_dec,saesdata_dec=aes:getAESData_dec()
 print("Decrypted: ", aesdata_dec)
 
+k1.clear()
+k2.clear()
+k3.clear()

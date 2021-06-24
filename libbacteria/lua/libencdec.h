@@ -21,6 +21,7 @@ INITLUAFUNC(getAESData);
 INITLUAFUNC(getAESData_len);
 INITLUAFUNC(createAESData);
 INITLUAFUNC(getPubKey);
+INITLUAFUNC(getPrivKey);
 //INITLUAFUNC(setKeyPair);
 
 struct lua_AESData{
@@ -28,13 +29,14 @@ struct lua_AESData{
 	size_t size;
 };
 
+
 static const struct luaL_reg encdeclib [] = {
       {"genRandBytes", lua_genRandBytes},
       {"AESenc", lua_AESenc},
       {"AESdec", lua_AESdec},
       {"getKeyPair", lua_getKeyPair},
       {"freeKeyPair", lua_freeKeyPair},
-      {"freeSharedKey", lua_freeSharedKey},
+      //{"freeSharedKey", lua_freeSharedKey},
       {"getSharedKey", lua_getSharedKey},
       {"createKeyPair", lua_createKeyPair},
       {"getSharedKey", lua_getSharedKey},
@@ -43,6 +45,7 @@ static const struct luaL_reg encdeclib [] = {
       LUAPAIR(getAESData_len)
       LUAPAIR(createAESData)
       LUAPAIR(getPubKey)
+      LUAPAIR(getPrivKey)
 //      LUAPAIR(setKeyPair)
       {NULL, NULL}
 };

@@ -213,9 +213,7 @@ int lua_freeKeyPair(lua_State *L) {
 	  return 1;
 }
 
-int lua_freeSharedKey(lua_State *L) {
-	
-}
+//int lua_freeSharedKey(lua_State *L) {}
 
 int lua_createKeyPair(lua_State *L) {
   uint8_t *pub = (uint8_t *)luaL_checkstring(L, 1);
@@ -238,6 +236,15 @@ INITLUAFUNC(getPubKey){
 	  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
 	  if(in == NULL) luaL_error(L,"KeysPair broken");
 	  lua_pushstring(L,in->pubKey);
+	  return 1;
+}
+INITLUAFUNC(getPrivKey){
+	  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
+	  if(in == NULL) luaL_error(L,"KeysPair broken");
+	  uint8_t retStr[LENKEY+1];
+	  retStr[LENKEY]=0;
+          getRawPrivKey(in->privKey,retStr);
+	  lua_pushlstring(L, retStr, LENKEY+1);
 	  return 1;
 }
 

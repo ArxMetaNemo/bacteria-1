@@ -3,16 +3,18 @@ baes = {}
 function baes:newKeyPair(keyPair)
 	local obj = {}
 		obj.keyPair=keyPair or {}
-	function obj.initKeyPair(pub,priv)
+	function obj:initKeyPair(pub,priv)
+	 	--print("init")
 		if not obj.keyPair == {} then return false end 
 		keyPair = {}
 		p = priv or nil
 		pb = pub or nil
 		if p == nil or pb == nil then
-			--print("geKeyPair()")
+		--	print("geKeyPair()")
 			keyPair = encdec.getKeyPair();
 		else
-			--print("p != {} and pb != {}")
+		--	print("p != {} and pb != {}")
+		--	print("Pub: ", pub, "priv: ",priv)
 			keyPair = encdec.createKeyPair(pub,priv)
 		end 
 		obj.keyPair = keyPair
@@ -30,7 +32,15 @@ function baes:newKeyPair(keyPair)
 		--print("ret pub key",encdec.getPubKey(obj.keyPair))
 		return encdec.getPubKey(obj.keyPair)
 	end
-	function obj.getSharedKey(key)
+	function obj:getPrivKey()
+		if obj.keyPair == nil then
+			 print("PubKey is nil")
+			 return nil 
+		end 
+		--print("ret pub key",encdec.getPubKey(obj.keyPair))
+		return encdec.getPrivKey(obj.keyPair)
+	end
+	function obj:getSharedKey(key)
 		--print("getSharedKey and pub is: ", key) 
 		if obj.keyPair == {} then return nil end
 		if key == nil then error("PubKey not will be nil") end
