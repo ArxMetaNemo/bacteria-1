@@ -8,7 +8,8 @@ struct keysPair createKeyPair(const uint8_t *priv, const uint8_t *pub) {
     fprintf(stderr, "Cant create x25519 pair\n");
     return ret;
   }
-  EVP_PKEY * privKey = EVP_PKEY_new_raw_private_key(EVP_PKEY_X25519, NULL, priv, len_key);
+  EVP_PKEY *privKey =
+      EVP_PKEY_new_raw_private_key(EVP_PKEY_X25519, NULL, priv, len_key);
   getRawPubKey(privKey, ret.pubKey);
   // EVP_PKEY_get_raw_public_key(privKey, ret.pubKey, &len_key);
   ret.privKey = privKey;
@@ -86,7 +87,7 @@ uint8_t *getSharedKey(struct keysPair *pair, const uint8_t *pubPeer,
 
   EVP_PKEY *pkey =
       EVP_PKEY_new_raw_public_key(NID_X25519, NULL, pubPeer, len_key);
-  
+
   if (EVP_PKEY_derive_set_peer(pair->pKeyCtx, pkey) <= 0) {
     fprintf(stderr, "Set peer key error\n");
     EVP_PKEY_free(pkey);

@@ -77,7 +77,7 @@ struct cryptocoin *init_cryptocoins(const char *pathToIniFile) {
 
     // printf("%s:%d %s:%s testnet:%s\n",crypt.rpchost, crypt.rpcport,
     // crypt.rpcuser, 	crypt.rpcpassword, crypt.testnet? "is testnet" : "is not
-    //testnet");
+    // testnet");
 
     sprintf(tmp_buf, "%s:%s", sec_name, "testnet");
     cryptocoins[i].testnet = iniparser_getboolean(ini_file, tmp_buf, 0);

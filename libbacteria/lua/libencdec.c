@@ -185,77 +185,81 @@ int lua_freeAESData(lua_State *L) {
 // x25519 and MAYBE rsa(mamonth...)aa support LATTER(not😠️need)
 
 int lua_getKeyPair(lua_State *L) {
-/*
-	EVP_PKEY * privKey;	//, *pubKey ;
-	unsigned char pubKey[LENKEY+1];
-	EVP_PKEY_CTX * pKeyCtx;//just ctx
-*/
-  size_t nbytes = sizeof(struct keysPair) +
-                  sizeof(EVP_PKEY *) + sizeof(EVP_PKEY_CTX *) + sizeof(unsigned char)*(LENKEY);
+  /*
+          EVP_PKEY * privKey;	//, *pubKey ;
+          unsigned char pubKey[LENKEY+1];
+          EVP_PKEY_CTX * pKeyCtx;//just ctx
+  */
+  size_t nbytes = sizeof(struct keysPair) + sizeof(EVP_PKEY *) +
+                  sizeof(EVP_PKEY_CTX *) + sizeof(unsigned char) * (LENKEY);
   struct keysPair *ret = (struct keysPair *)lua_newuserdata(L, nbytes);
   struct keysPair pair = generateKeyPair();
   if (pair.pKeyCtx == NULL) {
-		luaL_error(L,"Can't CTX init");
-    		return fprintf(stderr, "can't CTX init\n");
+    luaL_error(L, "Can't CTX init");
+    return fprintf(stderr, "can't CTX init\n");
   }
- ret->privKey = pair.privKey;
- memcpy(ret->pubKey, pair.pubKey, LENKEY+1);
- //ret->pubKey = pair.pubKey;
- ret->pKeyCtx = pair.pKeyCtx;
- return 1;
+  ret->privKey = pair.privKey;
+  memcpy(ret->pubKey, pair.pubKey, LENKEY + 1);
+  // ret->pubKey = pair.pubKey;
+  ret->pKeyCtx = pair.pKeyCtx;
+  return 1;
 }
 
 int lua_freeKeyPair(lua_State *L) {
-	  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
-	  if(in == NULL) luaL_error(L,"KeysPair broken");
-	  freeKeyPair(in);
-	  lua_pushboolean(L, 1);
-	  return 1;
+  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
+  if (in == NULL)
+    luaL_error(L, "KeysPair broken");
+  freeKeyPair(in);
+  lua_pushboolean(L, 1);
+  return 1;
 }
 
-//int lua_freeSharedKey(lua_State *L) {}
+// int lua_freeSharedKey(lua_State *L) {}
 
 int lua_createKeyPair(lua_State *L) {
   uint8_t *pub = (uint8_t *)luaL_checkstring(L, 1);
   uint8_t *priv = (uint8_t *)luaL_checkstring(L, 2);
   struct keysPair pair = createKeyPair(priv, pub);
-  size_t nbytes = sizeof(struct keysPair) +
-                  sizeof(EVP_PKEY *) + sizeof(EVP_PKEY_CTX *) + sizeof(unsigned char)*(LENKEY);
+  size_t nbytes = sizeof(struct keysPair) + sizeof(EVP_PKEY *) +
+                  sizeof(EVP_PKEY_CTX *) + sizeof(unsigned char) * (LENKEY);
   struct keysPair *ret = (struct keysPair *)lua_newuserdata(L, nbytes);
   if (pair.pKeyCtx == NULL) {
-		luaL_error(L,"Can't CTX init");
-    		return fprintf(stderr, "can't CTX init\n");
+    luaL_error(L, "Can't CTX init");
+    return fprintf(stderr, "can't CTX init\n");
   }
- ret->privKey = pair.privKey;
- memcpy(ret->pubKey, pair.pubKey, LENKEY+1);
- //ret->pubKey = pair.pubKey;
- ret->pKeyCtx = pair.pKeyCtx;
- return 1;
+  ret->privKey = pair.privKey;
+  memcpy(ret->pubKey, pair.pubKey, LENKEY + 1);
+  // ret->pubKey = pair.pubKey;
+  ret->pKeyCtx = pair.pKeyCtx;
+  return 1;
 }
-INITLUAFUNC(getPubKey){
-	  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
-	  if(in == NULL) luaL_error(L,"KeysPair broken");
-	  lua_pushstring(L,in->pubKey);
-	  return 1;
+INITLUAFUNC(getPubKey) {
+  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
+  if (in == NULL)
+    luaL_error(L, "KeysPair broken");
+  lua_pushstring(L, in->pubKey);
+  return 1;
 }
-INITLUAFUNC(getPrivKey){
-	  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
-	  if(in == NULL) luaL_error(L,"KeysPair broken");
-	  uint8_t retStr[LENKEY+1];
-	  retStr[LENKEY]=0;
-          getRawPrivKey(in->privKey,retStr);
-	  lua_pushlstring(L, retStr, LENKEY+1);
-	  return 1;
+INITLUAFUNC(getPrivKey) {
+  struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
+  if (in == NULL)
+    luaL_error(L, "KeysPair broken");
+  uint8_t retStr[LENKEY + 1];
+  retStr[LENKEY] = 0;
+  getRawPrivKey(in->privKey, retStr);
+  lua_pushlstring(L, retStr, LENKEY + 1);
+  return 1;
 }
 
 int lua_getSharedKey(lua_State *L) {
   size_t skeylen;
   struct keysPair *in = (struct keysPair *)lua_touserdata(L, 1);
   uint8_t *pub = (uint8_t *)luaL_checkstring(L, 2);
-  if(in == NULL) luaL_error(L,"KeysPair broken");
-  unsigned char *shared0 = (unsigned char*)getSharedKey(in, pub, &skeylen);
-//  printf("getShared0: %s size key:%d\n", shared0, skeylen	); 
-//  lua_pop(L,2);
+  if (in == NULL)
+    luaL_error(L, "KeysPair broken");
+  unsigned char *shared0 = (unsigned char *)getSharedKey(in, pub, &skeylen);
+  //  printf("getShared0: %s size key:%d\n", shared0, skeylen	);
+  //  lua_pop(L,2);
   lua_pushlstring(L, shared0, skeylen);
   lua_pushnumber(L, skeylen);
   free(shared0);
